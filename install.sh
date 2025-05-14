@@ -23,43 +23,7 @@ set -e
 if [ "$EUID" -ne 0 ]; then Err "Install script must run with root privileges!"
     exit 1 fi
 
-#==============================
-# Variables
-#==============================
-# some fields will contain sensitive information, dont forget to hide these fields (marked with `# sensitive`)
-# NOTE: 0: Ignore | 1: Apply
-USER_NAME=""
-USER_PASS=""  # sensitive
-USER_HOME="/home/$USER_NAME"
-HOSTNAME="MooseBox"
-ZONE=""
-
-USE_WIFI=0
-WIFI_SSID=""
-WIFI_PASS=""  # sensitive
-
-NM_RANDOMIZE_MAC=0
-
-ENABLE_NTP=1
-ENABLE_DOCKER=0
-
-PACKAGES=$(echo "
-zsh
-vim
-neovim
-ntp
-
-# Dev tools
-docker
-docker-compose
-python
-npm
-
-# Font support
-noto-fonts-emoji
-ttf-jetbrains-mono-nerd
-noto-fonts-cjk
-" | sed 's/\n/ /' | sed 's/,//g' | sed 's/#.*$//')
+source ./config
 
 #==============================
 # Util functions
@@ -277,6 +241,10 @@ uncomment /etc/sudoers "wheel ALL=(ALL:ALL) ALL"
 #==============================
 # Dev tools
 #==============================
+Info "Git setup"
+git config --global user.name "$GIT_USERNAME"
+git config --global user.email "$GIT_EMAIL"
+
 Info "Rust setup"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rustup.sh
 exec_script_in_user /tmp/rustup.sh
@@ -284,4 +252,3 @@ exec_script_in_user /tmp/rustup.sh
 Info "Docker setup"
 usermod -aG docker $USER_NAME
 [[ $ENABLE_DOCKER -eq 1 ]] && sudo systemctl enable --now docker
-

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#==============================
+# Parameters
+#==============================
+# boolean values - 0: false | 1: true
+# multi choice - opt1 | opt2 | opt3
+USER_NAME=""
+USER_PASS=""  # sensitive
+USER_HOME="/home/$USER_NAME"
+HOSTNAME="MooseBox"
+
+ZONE=""
+ENABLE_NTP=1
+
+USE_WIFI=0
+WIFI_SSID=""
+WIFI_PASS=""  # sensitive
+NM_RANDOMIZE_MAC=0
+
+GIT_USERNAME=""
+GIT_EMAIL=""
+ENABLE_DOCKER=0
+
+WM=""  # i3 | hyprland | bspwm
+
+PACKAGES=$(echo "
+zsh
+vim
+neovim
+ntp
+
+# Dev tools
+docker
+docker-compose
+python
+npm
+
+# Font support
+noto-fonts-emoji
+ttf-jetbrains-mono-nerd
+noto-fonts-cjk
+" | sed 's/\n/ /' | sed 's/,//g' | sed 's/#.*$//')
